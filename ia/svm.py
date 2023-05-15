@@ -7,8 +7,7 @@ from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score
 from sklearn.metrics import confusion_matrix
 import pickle
 
-# Definir la ruta de la carpeta principal que contiene las subcarpetas de imágenes
-def Modelo(pathImagen):
+def Entrenar(pathImagen):
     import numpy as np
     path = os.getcwd()+'/Dataset'
 
@@ -89,3 +88,31 @@ def Modelo(pathImagen):
     prediccion = modelo.predict([imagen])
 
     return prediccion[0]
+# Definir la ruta de la carpeta principal que contiene las subcarpetas de imágenes
+def Modelo(pathImagen):
+    import numpy as np
+    path = os.getcwd()+'/Dataset'
+
+    # Crear una lista de imágenes y etiquetas correspondientes
+    images = []
+    labels = []
+
+    with open('modelo_svm.pickle', 'rb') as f:
+        svm_model = pickle.load(f)
+
+    from PIL import Image
+    import numpy as np
+
+    # Carga la imagen y conviértela en una matriz NumPy
+    imagen = Image.open(pathImagen)
+    imagen = imagen.convert('L')  # Convierte la imagen a escala de grises
+    imagen = imagen.resize((128, 128))  # Cambia el tamaño de la imagen a 128x128
+    imagen = np.array(imagen)
+
+    imagen = imagen.flatten()
+
+    prediccion = svm_model.predict([imagen])
+
+    return prediccion[0]
+
+    
